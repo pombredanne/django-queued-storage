@@ -1,8 +1,9 @@
-import urllib
+import six
 
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.functional import SimpleLazyObject
+from django.utils.http import urlquote
 
 from queued_storage.conf import settings
 from queued_storage.utils import import_attribute
@@ -92,7 +93,7 @@ class QueuedStorage(object):
             raise ImproperlyConfigured("The QueuedStorage class '%s' "
                                        "doesn't define a needed backend." %
                                        (self, backend))
-        if not isinstance(backend, basestring):
+        if not isinstance(backend, six.string_types):
             raise ImproperlyConfigured("The QueuedStorage class '%s' "
                                        "requires its backends to be "
                                        "specified as dotted import paths "
@@ -126,7 +127,7 @@ class QueuedStorage(object):
         :type name: str
         :rtype: str
         """
-        return '%s_%s' % (self.cache_prefix, urllib.quote(name))
+        return '%s_%s' % (self.cache_prefix, urlquote(name))
 
     def using_local(self, name):
         """
